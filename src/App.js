@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
-import Image from './Image';
-import Tweet from './Tweet';
+import React, { useState, Suspense, lazy } from 'react';
 import Headline from './Headline';
 import Wrapper from './Wrapper';
 import './App.css';
+
+const LazyTweet = lazy(() => import('./Tweet'));
+const LazyImage = lazy(() => import('./Image'));
 
 function App() {
 
@@ -15,9 +16,9 @@ function App() {
   function getBlock(type) {
     switch (type) {
       case 'image':
-        return Image;
+        return LazyImage;
       case 'tweet':
-        return Tweet;
+        return LazyTweet;
       case 'text':
         return Headline;
     }
@@ -31,7 +32,9 @@ function App() {
       <div>
         { article.map(Block => (
           <Wrapper addBlock={(type) => addBlock(type)} >
-            <Block />
+            <Suspense fallback={<div>Loading...</div>}>
+              <Block />
+            </Suspense>
           </Wrapper>
         ))
         }
