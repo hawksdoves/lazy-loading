@@ -9,8 +9,10 @@ const LazyImage = lazy(() => import('./Image'));
 function App() {
 
   const [article, updateArticle] = useState([Headline]);
-  function addBlock(type) {
-    updateArticle([ ...article, getBlock(type)])
+  function addBlock(type, index) {
+    const newArticle = [ ...article ];
+    newArticle.splice(index+1, 0, getBlock(type))
+    updateArticle(newArticle)
   }
 
   function getBlock(type) {
@@ -30,8 +32,8 @@ function App() {
         This is my fake editor
       </header>
       <div>
-        { article.map(Block => (
-          <Wrapper addBlock={(type) => addBlock(type)} >
+        { article.map((Block, index) => (
+          <Wrapper addBlock={(type) => addBlock(type, index)} >
             <Suspense fallback={<div>Loading...</div>}>
               <Block />
             </Suspense>
